@@ -1,0 +1,23 @@
+# 全局参数
+sandbox:
+  type: subprocess
+  workdir: output/projects
+  timeout: 120
+
+llm:
+  primary_model: gpt-4o
+  fast_model: gpt-4o-mini
+  temperature: 0.7
+  max_tokens: 4096
+  max_retries: 3
+  retry_delay: 5
+
+pipeline:
+  review_required: true
+  max_bug_fix_rounds: 3
+  parallel_development: true
+
+logging:
+  level: INFO
+  save_to_file: true
+  log_dir: output/logs

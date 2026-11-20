@@ -1,0 +1,20 @@
+# LLM 模型配置 (可被 .env 覆盖)
+# 用户自行配置 API Key 和 Base URL
+defaults:
+  primary:
+    model: gpt-4o
+    temperature: 0.7
+    max_tokens: 4096
+  fast:
+    model: gpt-4o-mini
+    temperature: 0.5
+    max_tokens: 2048
+
+# 角色到模型的映射 (覆盖 company.yaml 中的 model 字段)
+role_mapping:
+  pm: primary
+  architect: primary
+  backend: primary
+  frontend: primary
+  qa: fast
+  devops: fast

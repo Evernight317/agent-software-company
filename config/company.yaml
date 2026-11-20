@@ -1,0 +1,73 @@
+# 公司配置 — 角色定义
+roles:
+  pm:
+    name: "Product Manager"
+    responsibilities:
+      - 需求分析
+      - 生成 PRD
+      - 创建 User Story 和验收标准
+      - Issue 优先级排序
+    model: primary
+    skills: [requirements, user-story, acceptance-criteria]
+
+  architect:
+    name: "Software Architect"
+    responsibilities:
+      - 技术方案设计
+      - 技术选型
+      - 架构设计
+      - 任务拆解
+    model: primary
+    skills: [system-design, api-design, tech-selection]
+
+  backend:
+    name: "Backend Developer"
+    responsibilities:
+      - 后端代码开发
+      - API 实现
+      - 数据库设计
+      - 单元测试
+    model: primary
+    skills: [python, fastapi, sqlite, testing]
+
+  frontend:
+    name: "Frontend Developer"
+    responsibilities:
+      - 前端代码开发
+      - UI 实现
+      - 交互逻辑
+      - 单元测试
+    model: primary
+    skills: [typescript, react, vite, tailwind]
+
+  qa:
+    name: "QA Engineer"
+    responsibilities:
+      - 集成测试
+      - E2E 测试
+      - Bug 报告
+      - 回归验证
+    model: fast
+    skills: [testing, pytest, playwright]
+
+  devops:
+    name: "DevOps Engineer"
+    responsibilities:
+      - Dockerfile
+      - docker-compose
+      - CI/CD 配置
+      - 部署验证
+    model: fast
+    skills: [docker, docker-compose, nginx, ci-cd]
+
+# 前后端分离架构
+architecture:
+  backend:
+    language: python
+    framework: fastapi
+    database: sqlite
+  frontend:
+    language: typescript
+    framework: react
+    bundler: vite
+    styling: tailwind
