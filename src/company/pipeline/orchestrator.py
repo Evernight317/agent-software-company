@@ -18,7 +18,8 @@ from company.engine import (
     ArtifactType,
 )
 from company.llm import LLMClient, prompts
-from company.agents import PMAgent, ArchitectAgent
+from company.agents import PMAgent, ArchitectAgent, DeveloperAgent, ReviewerAgent
+from company.engine.git import PRStatus
 from company.output import DevLogger
 
 
@@ -137,21 +138,60 @@ class Orchestrator:
 
         return design
 
-    def _run_development(self, design: str) -> str:
-        self.logger.phase("Phase 3: Development (pending Phase 3)")
+    def _run_development(self, design: str) -> dict:
+        self.logger.phase("Phase 3: Development")
 
         tasks = self.ctx.board.get_issues_by_status(IssueStatus.TODO)
         dev_tasks = [t for t in tasks if any(l in t.labels for l in ("backend", "frontend", "shared"))]
 
         if not dev_tasks:
             self.logger.log("system", "no dev tasks", "No development tasks found", "warning")
-            return ""
+            return {"prs": [], "reviews": []}
 
-        self.logger.log(
-            "system", "dev tasks queued",
-            f"{len(dev_tasks)} tasks waiting for implementation (Phase 3)",
-        )
-        return f"{len(dev_tasks)} tasks queued"
+        prs = []
+        for task in dev_tasks:
+            role_label = "backend" if "backend" in task.labels else "frontend"
+            from company.agents.base import Role
+            role = Role.BACKEND if role_label == "backend" else Role.FRONTEND
+
+            agent = DeveloperAgent(role=role, **self._build_agent_kwargs())
+            self.logger.log(role_label.title(), "task claimed", f"#{task.id} {task.title}")
+
+            pr = agent.execute_task(task, design=design)
+            if pr:
+                prs.append(pr)
+                self.logger.log(
+                    role_label.title(), "PR created",
+                    f"PR {pr.id} for #{task.id}", "success",
+                )
+
+        # Code review phase
+        reviews = self._run_review(prs)
+
+        return {"prs": prs, "reviews": reviews}
+
+    def _run_review(self, prs: list) -> list:
+        """Review all created PRs."""
+        if not prs:
+            return []
+
+        self.logger.phase("Phase 3b: Code Review")
+        reviewer = ReviewerAgent(**self._build_agent_kwargs())
+
+        results = []
+        for pr in prs:
+            review = reviewer.review_pr(pr)
+            if review.approved:
+                self.git.merge_pr(pr.id)
+                self.logger.log("Reviewer", "PR approved & merged", f"PR {pr.id}", "success")
+            else:
+                self.logger.log(
+                    "Reviewer", "changes requested",
+                    f"PR {pr.id}: {len(review.comments)} comments", "warning",
+                )
+            results.append({"pr_id": pr.id, "approved": review.approved, "comments": len(review.comments)})
+
+        return results
 
     def _run_qa(self, design: str) -> str:
         self.logger.phase("Phase 4: Testing (pending Phase 4)")

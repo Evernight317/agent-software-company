@@ -128,9 +128,9 @@ Existing code context (if any):
 {existing_code}
 
 Write the complete implementation. For each file, output:
-### FILE: {filepath}
-```{language}
-{code}
+### FILE: {{filepath}}
+```{{language}}
+{{code}}
 ```
 
 Include unit tests in a separate test file.
@@ -179,10 +179,10 @@ Changes:
 {diff}
 
 Provide review comments. For each issue, output:
-- FILE: {filepath}
-- LINE: {line_number}
-- SEVERITY: {suggestion|warning|blocking}
-- COMMENT: {your comment}
+- FILE: {{filepath}}
+- LINE: {{line_number}}
+- SEVERITY: {{suggestion|warning|blocking}}
+- COMMENT: {{your comment}}
 
 If the code is good, respond with: APPROVED
 If changes are needed, respond with: CHANGES_REQUESTED
@@ -200,8 +200,8 @@ Current Code:
 {current_code}
 
 Provide the fixed code. Output each changed file:
-### FILE: {filepath}
-```{language}
-{code}
+### FILE: {{filepath}}
+```{{language}}
+{{code}}
 ```
 """
