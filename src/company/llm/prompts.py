@@ -95,7 +95,7 @@ Create:
 5. ## Issues — list of actionable issues with title, description, priority, and labels
 
 Format each issue as:
-- [P{priority}] {title} | {description} | labels: {comma-separated}
+- [P{{priority}}] {{title}} | {{description}} | labels: {{comma-separated}}
 """
 
 ARCHITECT_DESIGN = """Based on the following PRD, design the technical architecture.
@@ -111,7 +111,7 @@ Create:
 5. ## Tasks — concrete development tasks
 
 Format each task as:
-- [{type}] {title} | {description} | labels: {comma-separated}
+- [{{type}}] {{title}} | {{description}} | labels: {{comma-separated}}
   Where type is: backend, frontend, or shared
 """
 
